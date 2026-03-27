@@ -17,7 +17,7 @@ const SideBar = () => {
   const menuItems = [
     { title: 'Home', path: '/', icon: <Home size={20} /> },
     { title: 'Courses', path: '/courses', icon: <BookOpen size={20} /> },
-    { title: 'Donuts', path: '/donuts', icon: <Coffee size={20} /> },
+    { title: 'Doubt', path: '/doubt', icon: <Coffee size={20} /> },
     { title: 'Contact', path: '/contact', icon: <Mail size={20} /> },
     { title: 'About', path: '/about', icon: <Info size={20} /> },
   ];
