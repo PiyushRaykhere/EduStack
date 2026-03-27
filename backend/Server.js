@@ -5,7 +5,6 @@ import "dotenv/config"
 
 import ConnectDB from "./config/dbconfig.js"
 
-import authMiddleware from './Middleware/authMiddleware.js'
 
 import UserRoute from "./Routes/UserRoute.js"
 import CourseRoute from "./Routes/CourseRoute.js"

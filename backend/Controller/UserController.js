@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 
 const UserController = {
-    // All Users:
     async getAllUsers(req, res) {
       try {
         let allUsers = await User.find();
