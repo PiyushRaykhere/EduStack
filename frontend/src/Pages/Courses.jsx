@@ -6,25 +6,17 @@ export default function Courses() {
     const [courses, setCourses] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     let navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch Token from local storage:
-        let token = localStorage.getItem('token');
-        if (!token) {
-            setError("Authentication token not found. Please login first.")
-            setLoading(false)
-            return;
-        }
-        
+        const storedUser = localStorage.getItem('user')
+        setIsLoggedIn(Boolean(storedUser))
+
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:5500/api/courses', {
-                    headers: {
-                        'Authorization': token
-                    }
-                })
+                const response = await axios.get('http://localhost:5500/api/courses')
                 console.log(response.data)  // log the received data in the console.
                 setCourses(response.data.data) // Access the data array from the response
                 setLoading(false)
@@ -70,8 +62,14 @@ export default function Courses() {
                                 </span>
                             </div>
                             <button onClick={()=>{
+                                if (!isLoggedIn) {
+                                    navigate('/login')
+                                    return
+                                }
                                 navigate(`/courses/enroll/${course._id}`)
-                            }}  className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">
+                            }}  className={`w-full mt-4 text-white font-medium py-2 px-4 rounded ${
+                                isLoggedIn ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 hover:bg-gray-500'
+                            }`}>
                                 Enroll Now
                             </button>
                         </div>

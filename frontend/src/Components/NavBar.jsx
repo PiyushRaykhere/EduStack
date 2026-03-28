@@ -56,7 +56,7 @@ export default function NavBar() {
           </button>
           
           <Link to="/" className="text-xl font-bold text-indigo-600">
-            LearnHub
+            EduStack
           </Link>
         </div>
 

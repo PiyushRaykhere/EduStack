@@ -10,7 +10,7 @@ let CourseSchema = new mongoose.Schema({
         required: true
     },
     duration: {
-        type: Number,
+        type: String,
         required: true
     },
     price: {
