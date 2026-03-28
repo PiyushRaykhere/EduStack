@@ -36,10 +36,10 @@ const SideBar = () => {
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-100">
           <div className="flex items-center">
             <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold">
-              LP
+              ED
             </div>
             {!isCollapsed && (
-              <h1 className="ml-3 text-lg font-semibold text-gray-800">LearnPro</h1>
+              <h1 className="ml-3 text-lg font-medium text-gray-500">Edustack</h1>
             )}
           </div>
           
