@@ -7,8 +7,8 @@ const router = Router();
 router.get('/', CourseController.getAllCourses);
 router.get('/:cid', CourseController.getCourses);
 router.post('/', CourseController.createCourse);
-router.put('/:id', adminMiddleware,CourseController.updateCourse);
-router.delete('/:id',adminMiddleware, CourseController.deleteCourse);
+router.put('/:id', CourseController.updateCourse);
+router.delete('/:id', CourseController.deleteCourse);
 
 
 

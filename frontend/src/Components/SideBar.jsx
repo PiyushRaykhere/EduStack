@@ -39,7 +39,7 @@ const SideBar = () => {
               ED
             </div>
             {!isCollapsed && (
-              <h1 className="ml-3 text-lg font-medium text-gray-500">Edustack</h1>
+              <h1 className="ml-3 text-lg font-semibold text-gray-500">EduStack</h1>
             )}
           </div>
           

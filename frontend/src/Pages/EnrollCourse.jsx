@@ -13,21 +13,9 @@ export default function EnrollCourse() {
     const [enrollmentSuccess, setEnrollmentSuccess] = useState(false)
 
     useEffect(() => {
-        // Fetch Token from local storage:
-        let token = localStorage.getItem('token')
-        if (!token) {
-            setError("Authentication token not found. Please login first.")
-            setLoading(false)
-            return
-        }
-        
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5500/api/courses/${cid}`, {
-                    headers: {
-                        'Authorization': token
-                    }
-                })
+                const response = await axios.get(`http://localhost:5500/api/courses/${cid}`)
                 console.log(response.data)  // log the received data in the console.
                 setCourseData(response.data.data) // Access the data array from the response
                 setLoading(false)
@@ -43,29 +31,34 @@ export default function EnrollCourse() {
 
     const handleEnrollment = async () => {
         setEnrolling(true)
+        setError(null)
         try {
-            const token = localStorage.getItem('token')
-            if (!token) {
-                setError("Authentication token not found. Please login first.")
+            const storedUser = localStorage.getItem('user')
+            if (!storedUser) {
+                setError("Please log in first to enroll in this course.")
                 setEnrolling(false)
                 return
             }
 
-            // Making the enrollment API call
-            await axios.post(`http://localhost:5500/api/enrollments`, 
-                { courseId: cid },
-                {
-                    headers: {
-                        'Authorization': token
-                    }
-                }
-            )
+            const parsedUser = JSON.parse(storedUser)
+            const userId = parsedUser?._id
+
+            if (!userId) {
+                setError("User information is missing. Please log in again.")
+                setEnrolling(false)
+                return
+            }
+
+            await axios.post("http://localhost:5500/api/enroll/addNewEnroll", {
+                userId,
+                courseId: cid
+            })
             
             setEnrollmentSuccess(true)
             setEnrolling(false)
         } catch (error) {
             console.error(error)
-            setError("Failed to enroll in this course. Please try again later.")
+            setError(error.response?.data?.message || "Failed to enroll in this course. Please try again later.")
             setEnrolling(false)
         }
     }
@@ -104,10 +97,10 @@ export default function EnrollCourse() {
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
                     <button 
-                        onClick={() => navigate('/dashboard')}
+                        onClick={() => navigate('/courses')}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded"
                     >
-                        Go to Dashboard
+                        Back to Courses
                     </button>
                     <button 
                         onClick={() => navigate('/courses')}
