@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import API_URL from '../config/api'
 
 export default function EnrollCourse() {
     let { cid } = useParams()
@@ -15,7 +16,7 @@ export default function EnrollCourse() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5500/api/courses/${cid}`)
+                const response = await axios.get(`${API_URL}/courses/${cid}`)
                 console.log(response.data)  // log the received data in the console.
                 setCourseData(response.data.data) // Access the data array from the response
                 setLoading(false)
@@ -49,7 +50,7 @@ export default function EnrollCourse() {
                 return
             }
 
-            await axios.post("http://localhost:5500/api/enroll/addNewEnroll", {
+            await axios.post(`${API_URL}/enroll/addNewEnroll`, {
                 userId,
                 courseId: cid
             })

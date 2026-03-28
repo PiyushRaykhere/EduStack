@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import API_URL from '../config/api'
 
 export default function Settings() {
   const navigate = useNavigate()
@@ -64,7 +65,7 @@ export default function Settings() {
         // For now, we'll use default values
         // Example API call would be:
         /*
-        const response = await axios.get(`http://localhost:5500/api/users/${userId}/settings`, {
+        const response = await axios.get(`${API_URL}/users/${userId}/settings`, {
           headers: {
             'Authorization': token
           }
@@ -140,7 +141,7 @@ export default function Settings() {
       // Example API call would be:
       /*
       await axios.put(
-        `http://localhost:5500/api/users/${userId}/settings`,
+        `${API_URL}/users/${userId}/settings`,
         {
           accountSettings,
           appearanceSettings,

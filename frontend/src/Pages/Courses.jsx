@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import API_URL from '../config/api'
 
 export default function Courses() {
     const [courses, setCourses] = useState([])
@@ -16,7 +17,7 @@ export default function Courses() {
 
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:5500/api/courses')
+                const response = await axios.get(`${API_URL}/courses`)
                 console.log(response.data)  // log the received data in the console.
                 setCourses(response.data.data) // Access the data array from the response
                 setLoading(false)

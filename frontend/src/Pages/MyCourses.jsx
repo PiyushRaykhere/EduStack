@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import API_URL from '../config/api'
 
 export default function MyCourses() {
   const navigate = useNavigate()
@@ -29,7 +30,7 @@ export default function MyCourses() {
           return
         }
 
-        const response = await axios.get(`http://localhost:5500/api/enroll/getEnrolls/${userId}`)
+        const response = await axios.get(`${API_URL}/enroll/getEnrolls/${userId}`)
         const enrolledCourses = response.data.map((item) => item.courseId).filter(Boolean)
 
         setCourses(enrolledCourses)

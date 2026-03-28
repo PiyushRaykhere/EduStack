@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Calendar, Image, Link as LinkIcon } from 'lucide-react';
 import axios from 'axios';
+import API_URL from '../../config/api';
 const SignUp = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -57,9 +58,9 @@ const SignUp = () => {
         role: UserData.role
       });
 
-      let a = await axios.get("http://localhost:5500/api/users");
+      let a = await axios.get(`${API_URL}/users`);
       console.log(a)
-      let Res = await axios.post("http://localhost:5500/api/users/signup",UserData);
+      let Res = await axios.post(`${API_URL}/users/signup`,UserData);
     //   if (Res.status == 201) {
         console.log(Res.data)
         // navigate("/");

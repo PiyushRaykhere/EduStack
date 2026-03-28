@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import API_URL from '../config/api'
 
 export default function Profile() {
   const navigate = useNavigate()
@@ -47,7 +48,7 @@ export default function Profile() {
         const tokenData = JSON.parse(atob(token.split('.')[1]))
         const userId = tokenData.id
         
-        const response = await axios.get(`http://localhost:5500/api/users/${userId}`, {
+        const response = await axios.get(`${API_URL}/users/${userId}`, {
           headers: {
             'Authorization': token
           }
@@ -142,7 +143,7 @@ export default function Profile() {
       }
       
       const response = await axios.put(
-        `http://localhost:5500/api/users/${userData._id}`,
+        `${API_URL}/users/${userData._id}`,
         updateData,
         {
           headers: {
@@ -175,7 +176,7 @@ export default function Profile() {
     try {
       const token = localStorage.getItem('token')
       
-      await axios.delete(`http://localhost:5500/api/users/${userData._id}`, {
+      await axios.delete(`${API_URL}/users/${userData._id}`, {
         headers: {
           'Authorization': token
         }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import axios from 'axios';
+import API_URL from '../../config/api';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     
     console.log({ email, password, rememberMe });
-    let Res = await axios.post("http://localhost:5500/api/users/login",{
+    let Res = await axios.post(`${API_URL}/users/login`,{
       email,
       password
     });
