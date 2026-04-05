@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import API_URL from '../config/api'
+import { useNavigate } from 'react-router-dom'
 
 export default function Doubt() {
+  const navigate = useNavigate()
   const [query, setQuery] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [answer, setAnswer] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const isLoggedIn = Boolean(localStorage.getItem('user'))
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (!isLoggedIn) {
+      setError('Please log in first to use the doubt assistant.')
+      return
+    }
 
     if (!query.trim()) {
       setError('Please enter your doubt first.')
@@ -53,6 +61,12 @@ export default function Doubt() {
 
         <div className="bg-white border border-slate-200 rounded-3xl shadow-sm min-h-[420px] p-4 sm:p-6 flex flex-col">
           <div className="flex-1 space-y-4 overflow-y-auto">
+            {!isLoggedIn && (
+              <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-4 text-amber-800 shadow-sm">
+                Please log in to ask doubts with the AI assistant. This page is disabled until you sign in.
+              </div>
+            )}
+
             {!submitted && !loading && !error && !answer && (
               <div className="h-full flex items-center justify-center">
                 <div className="text-center max-w-xl">
@@ -110,21 +124,33 @@ export default function Doubt() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Ask AI anything about your learning..."
-                className="w-full resize-none bg-transparent px-2 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none"
+                disabled={!isLoggedIn || loading}
+                className="w-full resize-none bg-transparent px-2 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
               />
               <div className="flex justify-between items-center mt-2 gap-4">
                 <p className="text-xs text-slate-400">AI responses may make mistakes. Verify important answers.</p>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={`rounded-2xl px-5 py-2.5 text-sm font-medium text-white ${
-                    loading
-                      ? 'bg-emerald-300 cursor-not-allowed'
-                      : 'bg-emerald-600 hover:bg-emerald-700'
-                  }`}
-                >
-                  {loading ? 'Sending...' : 'Ask AI'}
-                </button>
+                <div className="flex items-center gap-3">
+                  {!isLoggedIn && (
+                    <button
+                      type="button"
+                      onClick={() => navigate('/login')}
+                      className="rounded-2xl px-5 py-2.5 text-sm font-medium border border-slate-300 text-slate-700 hover:bg-slate-100"
+                    >
+                      Go to Login
+                    </button>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={!isLoggedIn || loading}
+                    className={`rounded-2xl px-5 py-2.5 text-sm font-medium text-white ${
+                      !isLoggedIn || loading
+                        ? 'bg-emerald-300 cursor-not-allowed'
+                        : 'bg-emerald-600 hover:bg-emerald-700'
+                    }`}
+                  >
+                    {loading ? 'Sending...' : 'Ask AI'}
+                  </button>
+                </div>
               </div>
             </div>
           </form>
