@@ -9,6 +9,7 @@ import ConnectDB from "./config/dbconfig.js"
 import UserRoute from "./Routes/UserRoute.js"
 import CourseRoute from "./Routes/CourseRoute.js"
 import EnrollRoute from "./Routes/EnrollRoute.js"
+import DoubtRoute from "./Routes/DoubtRoute.js"
 
 
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/users', UserRoute);
 app.use('/api/courses' ,CourseRoute);
 // app.use('/api/courses' ,authMiddleware,CourseRoute);
 app.use('/api/enroll' ,EnrollRoute);
+app.use('/api/doubt', DoubtRoute);
 
 
 

@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import axios from 'axios'
+import API_URL from '../config/api'
 
 export default function Doubt() {
   const [formData, setFormData] = useState({
@@ -6,6 +8,9 @@ export default function Doubt() {
     query: ''
   })
   const [submitted, setSubmitted] = useState(false)
+  const [answer, setAnswer] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -15,9 +20,23 @@ export default function Doubt() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
+    setLoading(true)
+    setSubmitted(false)
+    setAnswer('')
+    setError('')
+
+    try {
+      const response = await axios.post(`${API_URL}/doubt/ask`, formData)
+      setAnswer(response.data.answer)
+      setSubmitted(true)
+    } catch (err) {
+      console.error(err)
+      setError(err.response?.data?.message || 'Failed to get answer from Gemini. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -35,7 +54,13 @@ export default function Doubt() {
 
             {submitted && (
               <div className="bg-green-100 border border-green-200 text-green-700 rounded-lg p-4 mb-6">
-                Your doubt has been submitted in demo mode. We are not storing or sending it yet.
+                Gemini has generated an answer for your doubt.
+              </div>
+            )}
+
+            {error && (
+              <div className="bg-red-100 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
+                {error}
               </div>
             )}
 
@@ -70,15 +95,26 @@ export default function Doubt() {
                   placeholder="Describe your doubt here..."
                   className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
+                
               </div>
 
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md"
+                disabled={loading}
+                className={`bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md ${
+                  loading ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
               >
-                Submit Doubt
+                {loading ? 'Getting Answer...' : 'Submit Doubt'}
               </button>
             </form>
+
+            {answer && (
+              <div className="mt-8 bg-blue-50 border border-blue-100 rounded-lg p-5">
+                <h2 className="text-lg font-semibold text-blue-800 mb-3">Gemini Answer</h2>
+                <p className="text-gray-700 whitespace-pre-line">{answer}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
