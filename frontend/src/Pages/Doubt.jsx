@@ -3,32 +3,29 @@ import axios from 'axios'
 import API_URL from '../config/api'
 
 export default function Doubt() {
-  const [formData, setFormData] = useState({
-    email: '',
-    query: ''
-  })
+  const [query, setQuery] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [answer, setAnswer] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (!query.trim()) {
+      setError('Please enter your doubt first.')
+      return
+    }
+
     setLoading(true)
     setSubmitted(false)
     setAnswer('')
     setError('')
 
     try {
-      const response = await axios.post(`${API_URL}/doubt/ask`, formData)
+      const response = await axios.post(`${API_URL}/doubt/ask`, {
+        query: query.trim()
+      })
       setAnswer(response.data.answer)
       setSubmitted(true)
     } catch (err) {
@@ -40,82 +37,97 @@ export default function Doubt() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
-            <h1 className="text-xl md:text-2xl font-bold text-white">Ask a Doubt</h1>
-            <p className="text-blue-100 mt-1">Ask you Question and wait , we will get back to you soon </p>
+    <div className="bg-slate-100 min-h-screen flex flex-col">
+      <div className="max-w-4xl w-full mx-auto flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <div className="inline-flex items-center rounded-full bg-emerald-100 text-emerald-700 px-3 py-1 text-sm font-medium">
+            AI Study Assistant
           </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mt-4">
+            Ask your doubt
+          </h1>
+          <p className="text-slate-600 mt-2 max-w-2xl">
+            Type any learning question and get a simple AI-generated answer.
+          </p>
+        </div>
 
-          <div className="p-6">
-            <p className="text-gray-600 mb-6">
-              Use this placeholder form to submit a question.            </p>
+        <div className="bg-white border border-slate-200 rounded-3xl shadow-sm min-h-[420px] p-4 sm:p-6 flex flex-col">
+          <div className="flex-1 space-y-4 overflow-y-auto">
+            {!submitted && !loading && !error && !answer && (
+              <div className="h-full flex items-center justify-center">
+                <div className="text-center max-w-xl">
+                  <div className="w-14 h-14 mx-auto rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold">
+                    G
+                  </div>
+                  <h2 className="text-xl font-semibold text-slate-800 mt-4">Start a new conversation</h2>
+                  <p className="text-slate-500 mt-2">
+                    Ask about courses, coding concepts, assignments, or anything you are stuck on.
+                  </p>
+                </div>
+              </div>
+            )}
 
             {submitted && (
-              <div className="bg-green-100 border border-green-200 text-green-700 rounded-lg p-4 mb-6">
-                Gemini has generated an answer for your doubt.
+              <div className="flex justify-end">
+                <div className="max-w-[85%] rounded-3xl rounded-br-md bg-slate-900 text-white px-5 py-4 shadow-sm">
+                  <p className="whitespace-pre-line">{query}</p>
+                </div>
+              </div>
+            )}
+
+            {loading && (
+              <div className="flex justify-start">
+                <div className="max-w-[85%] rounded-3xl rounded-bl-md bg-emerald-50 border border-emerald-100 px-5 py-4 text-slate-700 shadow-sm">
+                  AI is thinking...
+                </div>
               </div>
             )}
 
             {error && (
-              <div className="bg-red-100 border border-red-200 text-red-700 rounded-lg p-4 mb-6">
-                {error}
+              <div className="flex justify-start">
+                <div className="max-w-[85%] rounded-3xl rounded-bl-md bg-red-50 border border-red-100 px-5 py-4 text-red-700 shadow-sm">
+                  {error}
+                </div>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="name@example.com"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="query" className="block text-sm font-medium text-gray-700 mb-1">
-                  Your Query
-                </label>
-                <textarea
-                  id="query"
-                  name="query"
-                  rows="6"
-                  required
-                  value={formData.query}
-                  onChange={handleChange}
-                  placeholder="Describe your doubt here..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
-                
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className={`bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md ${
-                  loading ? 'opacity-70 cursor-not-allowed' : ''
-                }`}
-              >
-                {loading ? 'Getting Answer...' : 'Submit Doubt'}
-              </button>
-            </form>
-
             {answer && (
-              <div className="mt-8 bg-blue-50 border border-blue-100 rounded-lg p-5">
-                <h2 className="text-lg font-semibold text-blue-800 mb-3">Gemini Answer</h2>
-                <p className="text-gray-700 whitespace-pre-line">{answer}</p>
+              <div className="flex justify-start">
+                <div className="max-w-[85%] rounded-3xl rounded-bl-md bg-emerald-50 border border-emerald-100 px-5 py-4 shadow-sm">
+                  <div className="text-sm font-semibold text-emerald-700 mb-2">Gemini</div>
+                  <p className="text-slate-700 whitespace-pre-line">{answer}</p>
+                </div>
               </div>
             )}
           </div>
+
+          <form onSubmit={handleSubmit} className="mt-6 pt-4 border-t border-slate-200">
+            <div className="rounded-3xl border border-slate-300 bg-slate-50 p-3 shadow-sm">
+              <textarea
+                id="query"
+                name="query"
+                rows="3"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Ask AI anything about your learning..."
+                className="w-full resize-none bg-transparent px-2 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none"
+              />
+              <div className="flex justify-between items-center mt-2 gap-4">
+                <p className="text-xs text-slate-400">AI responses may make mistakes. Verify important answers.</p>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`rounded-2xl px-5 py-2.5 text-sm font-medium text-white ${
+                    loading
+                      ? 'bg-emerald-300 cursor-not-allowed'
+                      : 'bg-emerald-600 hover:bg-emerald-700'
+                  }`}
+                >
+                  {loading ? 'Sending...' : 'Ask AI'}
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

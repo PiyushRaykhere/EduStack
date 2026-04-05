@@ -6,11 +6,11 @@ const GEMINI_API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/mo
 const DoubtController = {
   async askDoubt(req, res) {
     try {
-      const { email, query } = req.body
+      const { query } = req.body
 
-      if (!email || !query) {
+      if (!query) {
         return res.status(400).json({
-          message: "Email and query are required"
+          message: "Query is required"
         })
       }
 
@@ -22,7 +22,6 @@ const DoubtController = {
 
       const prompt = `
 You are an educational assistant for an online learning platform.
-Student email: ${email}
 Student question: ${query}
 
 Give a clear, beginner-friendly answer in simple language.
@@ -60,7 +59,6 @@ Give a clear, beginner-friendly answer in simple language.
         "No response received from Gemini."
 
       return res.status(200).json({
-        email,
         query,
         answer
       })
