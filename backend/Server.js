@@ -34,5 +34,5 @@ app.use('/api/doubt', DoubtRoute);
 
 
 app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
+    console.log(`Server is running on PORT ${process.env.PORT}`);
 })
