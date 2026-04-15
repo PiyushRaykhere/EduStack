@@ -43,7 +43,7 @@ export default function EnrollCourse() {
 
             const parsedUser = JSON.parse(storedUser)
             const userId = parsedUser?._id
-
+            
             if (!userId) {
                 setError("User information is missing. Please log in again.")
                 setEnrolling(false)
