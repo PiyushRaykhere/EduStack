@@ -17,10 +17,35 @@ let CourseSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    originalPrice: {
+        type: Number
+    },
+    category: {
+        type: String,
+        required: true,
+        default: "General"
+    },
+    instructor: {
+        type: String,
+        required: true,
+        default: "Expert Instructor"
+    },
+    level: {
+        type: String,
+        enum: ["Beginner", "Intermediate", "Advanced", "All Levels"],
+        default: "All Levels"
+    },
     description: {
         type: String,
         required: true
     },
+    curriculum: [{
+        title: { type: String, required: true },
+        lectures: [{
+            title: { type: String, required: true },
+            duration: { type: String, required: true }
+        }]
+    }],
     createdAt: {
         type: Date,
         default: Date.now

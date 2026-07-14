@@ -19,7 +19,9 @@ const EnrolledController = {
 
     async createEnroll(req, res) {
         try {
-            let { userId, courseId } = req.body;
+            // userId comes from the verified JWT (authMiddleware), not from the request body
+            const userId = req.user.id;
+            const { courseId } = req.body;
             console.log("New enrollment request:", userId, courseId);
 
             // Prevent duplicate enrollments

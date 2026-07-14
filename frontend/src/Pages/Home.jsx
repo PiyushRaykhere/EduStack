@@ -71,12 +71,12 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredCourses.map(course => (
             <div key={course.id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-              <img 
-                src={course.poster} 
+              <img
+                src={course.poster}
                 alt={course.name}
                 className="w-full h-48 object-cover"
                 onError={(e) => {
-                  e.target.src = "https://via.placeholder.com/300x200?text=Course+Image";
+                  e.target.src = "https://placehold.co/300x200?text=Course+Image";
                 }}
               />
               <div className="p-6">

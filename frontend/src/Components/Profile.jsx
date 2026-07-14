@@ -269,11 +269,11 @@ export default function Profile() {
                   <div className="flex flex-col items-center">
                     <div className="w-32 h-32 relative mb-4">
                       <img
-                        src={imagePreview || "https://via.placeholder.com/128?text=No+Image"}
+                        src={imagePreview || "https://placehold.co/128x128?text=No+Image"}
                         alt="Profile"
                         className="w-full h-full object-cover rounded-full border-2 border-gray-200"
                         onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/128?text=No+Image"
+                          e.target.src = "https://placehold.co/128x128?text=No+Image"
                         }}
                       />
                       {isEditing && (

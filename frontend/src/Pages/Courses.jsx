@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import API_URL from '../config/api'
+import { formatDuration } from '../utils/formatDuration'
+
+const PLACEHOLDER_IMG = 'https://placehold.co/300x200?text=Course+Image'
 
 export default function Courses() {
     const [courses, setCourses] = useState([])
@@ -43,12 +46,12 @@ export default function Courses() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map(course => (
                     <div key={course._id} className="border rounded-lg overflow-hidden shadow-lg">
-                        <img 
-                            src={course.poster} 
-                            alt={course.name} 
+                        <img
+                            src={course.poster}
+                            alt={course.name}
                             className="w-full h-48 object-cover"
                             onError={(e) => {
-                                e.target.src = "https://via.placeholder.com/300x200?text=Course+Image"
+                                e.target.src = PLACEHOLDER_IMG
                             }}
                         />
                         <div className="p-4">
@@ -56,7 +59,7 @@ export default function Courses() {
                             <p className="text-gray-700 mb-4">{course.description}</p>
                             <div className="flex justify-between items-center">
                                 <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
-                                    {course.duration} hours
+                                    {formatDuration(course.duration)}
                                 </span>
                                 <span className="font-bold text-lg">
                                     ₹{course.price.toLocaleString()}

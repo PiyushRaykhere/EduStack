@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import API_URL from '../config/api'
+import { formatDuration } from '../utils/formatDuration'
+
+const PLACEHOLDER_IMG = 'https://placehold.co/300x500?text=Course+Image'
 
 export default function EnrollCourse() {
     let { cid } = useParams()
     const navigate = useNavigate()
-    
+
     const [courseData, setCourseData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -14,11 +17,16 @@ export default function EnrollCourse() {
     const [enrollmentSuccess, setEnrollmentSuccess] = useState(false)
 
     useEffect(() => {
+        if (!API_URL) {
+            setError('API configuration is missing. Please contact support.')
+            setLoading(false)
+            return
+        }
+
         const fetchData = async () => {
             try {
                 const response = await axios.get(`${API_URL}/courses/${cid}`)
-                console.log(response.data)  // log the received data in the console.
-                setCourseData(response.data.data) // Access the data array from the response
+                setCourseData(response.data.data)
                 setLoading(false)
             } catch (error) {
                 console.error(error)
@@ -26,7 +34,7 @@ export default function EnrollCourse() {
                 setLoading(false)
             }
         }
-        
+
         fetchData()
     }, [cid])
 
@@ -34,27 +42,20 @@ export default function EnrollCourse() {
         setEnrolling(true)
         setError(null)
         try {
-            const storedUser = localStorage.getItem('user')
-            if (!storedUser) {
+            const token = localStorage.getItem('token')
+            if (!token) {
                 setError("Please log in first to enroll in this course.")
                 setEnrolling(false)
                 return
             }
 
-            const parsedUser = JSON.parse(storedUser)
-            const userId = parsedUser?._id
-            
-            if (!userId) {
-                setError("User information is missing. Please log in again.")
-                setEnrolling(false)
-                return
-            }
-
+            // userId is derived server-side from the JWT — do not send it in the body
             await axios.post(`${API_URL}/enroll/addNewEnroll`, {
-                userId,
                 courseId: cid
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
             })
-            
+
             setEnrollmentSuccess(true)
             setEnrolling(false)
         } catch (error) {
@@ -78,12 +79,25 @@ export default function EnrollCourse() {
             <div className="text-center p-8 bg-white shadow-lg rounded-lg max-w-md">
                 <div className="text-red-500 text-5xl mb-4">⚠️</div>
                 <p className="text-lg font-medium text-red-600">{error}</p>
-                <button 
-                    onClick={() => navigate('/courses')}
-                    className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded"
-                >
-                    Back to Courses
-                </button>
+                <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+                    <button
+                        onClick={() => {
+                            setError(null)
+                            setLoading(true)
+                            // Re-trigger the effect by re-mounting or just reset:
+                            window.location.reload()
+                        }}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded"
+                    >
+                        Retry
+                    </button>
+                    <button
+                        onClick={() => navigate('/courses')}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-6 rounded"
+                    >
+                        Back to Courses
+                    </button>
+                </div>
             </div>
         </div>
     )
@@ -96,14 +110,14 @@ export default function EnrollCourse() {
                 <p className="text-lg text-gray-600 mb-6">
                     You have successfully enrolled in {courseData?.name}. Happy learning!
                 </p>
-                <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    <button 
-                        onClick={() => navigate('/courses')}
+                <div className="flex flex-col sm:flex-row justify-center gap-3">
+                    <button
+                        onClick={() => navigate('/my-courses')}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded"
                     >
-                        Back to Courses
+                        Go to My Courses
                     </button>
-                    <button 
+                    <button
                         onClick={() => navigate('/courses')}
                         className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-6 rounded"
                     >
@@ -119,12 +133,12 @@ export default function EnrollCourse() {
             <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="md:flex">
                     <div className="xl:flex-shrink-0">
-                        <img 
-                            className="h-48 w-full object-cover md:w-64 md:h-full" 
-                            src={courseData?.poster || "https://via.placeholder.com/300x500?text=Course+Image"}
+                        <img
+                            className="h-48 w-full object-cover md:w-64 md:h-full"
+                            src={courseData?.poster || PLACEHOLDER_IMG}
                             alt={courseData?.name || "Course"}
                             onError={(e) => {
-                                e.target.src = "https://via.placeholder.com/300x500?text=Course+Image"
+                                e.target.src = PLACEHOLDER_IMG
                             }}
                         />
                     </div>
@@ -136,7 +150,7 @@ export default function EnrollCourse() {
                                     <span className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium mr-2">
                                         {courseData?.category || "Course"}
                                     </span>
-                                    <span className="text-gray-600 text-sm">{courseData?.duration} hours</span>
+                                    <span className="text-gray-600 text-sm">{formatDuration(courseData?.duration)}</span>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end">

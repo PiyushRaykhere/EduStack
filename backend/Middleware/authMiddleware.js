@@ -6,10 +6,14 @@ import "dotenv/config";
 const authMiddleware = express.Router();
 
 authMiddleware.use((req, res, next) => {
-    const token = req.header('Authorization');
-    if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
+    const authHeader = req.header('Authorization');
+    if (!authHeader) return res.status(401).json({ message: 'No token, authorization denied' });
 
-    // Compare The Token:
+    // Authorization: Bearer <token>
+    const token = authHeader.startsWith('Bearer ')
+        ? authHeader.slice('Bearer '.length)
+        : authHeader;
+
     jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
         if (err) return res.status(403).json({ message: 'Token is not valid' });
         req.user = user;

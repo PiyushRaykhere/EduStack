@@ -41,9 +41,11 @@ const UserController = {
         return;
       }
 
-      let token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
-        expiresIn: "30d",
-      });
+      let token = jwt.sign(
+        { id: user.id, role: user.role },
+        process.env.SECRET_KEY,
+        { expiresIn: "30d" }
+      );
       res.json({ token, user });
     },
 
@@ -64,9 +66,11 @@ const UserController = {
         let savedUser = await newUser.save();
 
         let Res = {
-          token: jwt.sign({ id: savedUser.id }, process.env.SECRET_KEY, {
-            expiresIn: "30d",
-          }),
+          token: jwt.sign(
+            { id: savedUser.id, role: savedUser.role },
+            process.env.SECRET_KEY,
+            { expiresIn: "30d" }
+          ),
           user: savedUser,
         };
         res.status(201).json(Res);

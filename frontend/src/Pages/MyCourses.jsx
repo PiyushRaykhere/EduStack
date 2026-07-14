@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import API_URL from '../config/api'
+import { formatDuration } from '../utils/formatDuration'
+
+const PLACEHOLDER_IMG = 'https://placehold.co/300x200?text=Course+Image'
 
 export default function MyCourses() {
   const navigate = useNavigate()
@@ -84,7 +87,7 @@ export default function MyCourses() {
                 alt={course.name}
                 className="w-full h-48 object-cover"
                 onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/300x200?text=Course+Image'
+                  e.target.src = PLACEHOLDER_IMG
                 }}
               />
               <div className="p-4">
@@ -92,7 +95,7 @@ export default function MyCourses() {
                 <p className="text-gray-700 mb-4">{course.description}</p>
                 <div className="flex justify-between items-center">
                   <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
-                    {course.duration} hours
+                    {formatDuration(course.duration)}
                   </span>
                   <span className="font-bold text-lg">
                     Rs. {course.price?.toLocaleString?.() ?? course.price}
