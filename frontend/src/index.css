@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    @apply text-slate-900 bg-slate-50 antialiased;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-indigo-500 outline-offset-2 rounded;
+  }
+
+  ::selection {
+    @apply bg-indigo-200 text-indigo-900;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  input, textarea, select, button {
+    font-family: inherit;
+    font-size: inherit;
+  }
+}
+
+@layer components {
+  /* Loading spinner used in several pages */
+  .spinner {
+    @apply w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center;
+  }
+  .spinner-inner {
+    @apply text-indigo-600 animate-spin;
+  }
+
+  /* Scroll-reveal animation (fade + slide up) */
+  .reveal-up {
+    @apply opacity-0 translate-y-6 transition-all duration-500 ease-out;
+  }
+  .reveal-up.is-revealed {
+    @apply opacity-100 translate-y-0;
+  }
+}
+
+@layer utilities {
+  /* Scrollbar (Webkit only — fine for Chromium/Edge/Safari) */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400;
+  }
+}

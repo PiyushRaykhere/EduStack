@@ -3,10 +3,11 @@ import Enrolled from "../Models/Enrolled.js";
 const EnrolledController = {
     async getEnrolls(req, res) {
         try {
-            let { uid } = req.params;
-            console.log("Fetching enrollments for user:", uid);
+            // userId comes from the verified JWT, not from the URL
+            const userId = req.user.id;
+            console.log("Fetching enrollments for user:", userId);
 
-            let allEnrolls = await Enrolled.find({ userId: uid })
+            let allEnrolls = await Enrolled.find({ userId })
                 .populate("userId courseId"); // Populating user and course details
 
             console.log(allEnrolls);

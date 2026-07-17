@@ -6,7 +6,7 @@ import authMiddleware from "../Middleware/authMiddleware.js";
 
 const router = Router();
 
-router.get("/getEnrolls/:uid",EnrollController.getEnrolls);
+router.get("/getEnrolls",authMiddleware,EnrollController.getEnrolls);
 router.post("/addNewEnroll",authMiddleware,EnrollController.createEnroll);
 
 

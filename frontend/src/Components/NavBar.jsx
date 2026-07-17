@@ -61,7 +61,7 @@ export default function NavBar() {
         </div>
 
         {/* Center - Search Bar */}
-        <div className="relative max-w-md w-full mx-4 hidden sm:block">
+        {/* <div className="relative max-w-md w-full mx-4 hidden sm:block">
           <input
             type="text"
             placeholder="Search courses, topics, instructors..."
@@ -71,7 +71,7 @@ export default function NavBar() {
             size={18} 
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
           />
-        </div>
+        </div> */}
 
         {/* Right side - Auth/User Section */}
         <div className="hidden md:flex items-center space-x-4">
